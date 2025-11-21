@@ -82,3 +82,66 @@
 [2025-11-21T00:06:27.035+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:06:27.035+0000] {dag.py:3047} INFO - Sync 1 DAGs
 [2025-11-21T00:06:27.050+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:06:27.050+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_etl to None, run_after=None
 [2025-11-21T00:06:27.118+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/extract_transform_load_dag.py took 0.216 seconds
+[2025-11-21T00:06:59.635+0000] {processor.py:161} INFO - Started process (PID=310) to work on /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:06:59.637+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/extract_transform_load_dag.py for tasks to queue
+[2025-11-21T00:06:59.638+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:06:59.638+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:06:59.727+0000] {processor.py:840} INFO - DAG(s) 'copa2024_etl' retrieved from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:06:59.759+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:06:59.759+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:06:59.774+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:06:59.774+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_etl to None, run_after=None
+[2025-11-21T00:06:59.851+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/extract_transform_load_dag.py took 0.220 seconds
+[2025-11-21T00:07:33.622+0000] {processor.py:161} INFO - Started process (PID=312) to work on /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:07:33.624+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/extract_transform_load_dag.py for tasks to queue
+[2025-11-21T00:07:33.625+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:07:33.625+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:07:33.712+0000] {processor.py:840} INFO - DAG(s) 'copa2024_etl' retrieved from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:07:33.745+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:07:33.744+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:07:33.765+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:07:33.765+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_etl to None, run_after=None
+[2025-11-21T00:07:33.831+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/extract_transform_load_dag.py took 0.213 seconds
+[2025-11-21T00:08:06.379+0000] {processor.py:161} INFO - Started process (PID=314) to work on /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:08:06.380+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/extract_transform_load_dag.py for tasks to queue
+[2025-11-21T00:08:06.382+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:08:06.381+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:08:06.468+0000] {processor.py:840} INFO - DAG(s) 'copa2024_etl' retrieved from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:08:06.498+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:08:06.498+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:08:06.516+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:08:06.516+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_etl to None, run_after=None
+[2025-11-21T00:08:06.597+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/extract_transform_load_dag.py took 0.222 seconds
+[2025-11-21T00:08:40.269+0000] {processor.py:161} INFO - Started process (PID=316) to work on /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:08:40.271+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/extract_transform_load_dag.py for tasks to queue
+[2025-11-21T00:08:40.273+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:08:40.272+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:08:40.359+0000] {processor.py:840} INFO - DAG(s) 'copa2024_etl' retrieved from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:08:40.390+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:08:40.389+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:08:40.403+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:08:40.403+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_etl to None, run_after=None
+[2025-11-21T00:08:40.473+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/extract_transform_load_dag.py took 0.209 seconds
+[2025-11-21T00:09:12.867+0000] {processor.py:161} INFO - Started process (PID=318) to work on /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:09:12.868+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/extract_transform_load_dag.py for tasks to queue
+[2025-11-21T00:09:12.870+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:09:12.869+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:09:12.957+0000] {processor.py:840} INFO - DAG(s) 'copa2024_etl' retrieved from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:09:12.993+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:09:12.992+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:09:13.012+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:09:13.011+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_etl to None, run_after=None
+[2025-11-21T00:09:13.080+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/extract_transform_load_dag.py took 0.217 seconds
+[2025-11-21T00:09:45.850+0000] {processor.py:161} INFO - Started process (PID=320) to work on /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:09:45.852+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/extract_transform_load_dag.py for tasks to queue
+[2025-11-21T00:09:45.853+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:09:45.852+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:09:45.941+0000] {processor.py:840} INFO - DAG(s) 'copa2024_etl' retrieved from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:09:45.973+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:09:45.973+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:09:45.987+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:09:45.987+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_etl to None, run_after=None
+[2025-11-21T00:09:46.049+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/extract_transform_load_dag.py took 0.202 seconds
+[2025-11-21T00:10:20.107+0000] {processor.py:161} INFO - Started process (PID=322) to work on /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:10:20.109+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/extract_transform_load_dag.py for tasks to queue
+[2025-11-21T00:10:20.110+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:10:20.110+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:10:20.245+0000] {processor.py:840} INFO - DAG(s) 'copa2024_etl' retrieved from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:10:20.275+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:10:20.275+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:10:20.289+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:10:20.289+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_etl to None, run_after=None
+[2025-11-21T00:10:20.349+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/extract_transform_load_dag.py took 0.246 seconds
+[2025-11-21T00:10:53.797+0000] {processor.py:161} INFO - Started process (PID=324) to work on /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:10:53.799+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/extract_transform_load_dag.py for tasks to queue
+[2025-11-21T00:10:53.800+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:10:53.800+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:10:53.877+0000] {processor.py:840} INFO - DAG(s) 'copa2024_etl' retrieved from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:10:53.909+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:10:53.909+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:10:53.924+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:10:53.923+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_etl to None, run_after=None
+[2025-11-21T00:10:53.994+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/extract_transform_load_dag.py took 0.201 seconds
+[2025-11-21T00:11:26.302+0000] {processor.py:161} INFO - Started process (PID=326) to work on /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:11:26.304+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/extract_transform_load_dag.py for tasks to queue
+[2025-11-21T00:11:26.305+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:11:26.304+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:11:26.402+0000] {processor.py:840} INFO - DAG(s) 'copa2024_etl' retrieved from /opt/airflow/dags/extract_transform_load_dag.py
+[2025-11-21T00:11:26.431+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:11:26.431+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:11:26.445+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:11:26.445+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_etl to None, run_after=None
+[2025-11-21T00:11:26.506+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/extract_transform_load_dag.py took 0.207 seconds

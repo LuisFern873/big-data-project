@@ -3,18 +3,16 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pymongo import MongoClient
 
-# --- CONFIGURACIÓN DE MONGODB (AJUSTA ESTOS VALORES) ---
+# CAMBIA ESTOOOOOOOO
 MONGO_USER = "root"
 MONGO_PASS = "example"
 MONGO_HOST = "localhost"
 MONGO_PORT = 27017
 DB_NAME = "copa2024" 
-EVENTS_COLLECTION = "events" # Colección que contiene la llave 'location'
+EVENTS_COLLECTION = "events"
 
 MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}:{MONGO_PORT}/"
-# --------------------------------------------------------
 
-# --- 1. FUNCIÓN DE CONEXIÓN Y CARGA DE DATOS ---
 @st.cache_data
 def load_events_data():
     """Conecta a MongoDB, extrae eventos con ubicación y los convierte a DataFrame."""
@@ -24,8 +22,6 @@ def load_events_data():
         db = client[DB_NAME]
         coleccion_events = db[EVENTS_COLLECTION]
         
-        # Filtramos solo los documentos que tienen la llave 'location'
-        # y solo extraemos 'location', 'type' y 'player' para optimizar
         data = coleccion_events.find(
             {"location": {"$exists": True}},
             {"location": 1, "type": 1, "player": 1, "_id": 0}
@@ -33,13 +29,11 @@ def load_events_data():
         
         df = pd.DataFrame(list(data))
         
-        # Aseguramos que la columna 'location' sea una lista (coordenadas [x, y])
         if not df.empty and isinstance(df['location'].iloc[0], list):
-            # Separar las coordenadas X y Y en columnas separadas
             df[['x', 'y']] = pd.DataFrame(df['location'].tolist(), index=df.index)
         else:
             st.error("Error: Los datos de ubicación no tienen el formato [x, y] esperado o están vacíos.")
-            return pd.DataFrame() # Devuelve un DataFrame vacío si falla la extracción
+            return pd.DataFrame()
 
         return df
 
@@ -50,10 +44,8 @@ def load_events_data():
         if client:
             client.close()
 
-# --- 2. FUNCIÓN DE DIBUJO DEL CAMPO DE JUEGO ---
 def draw_pitch(ax):
     """Dibuja los elementos básicos de un campo de fútbol de 120x80."""
-    # Líneas del campo (dimensiones de StatsBomb: 120x80)
     ax.plot([0, 0], [0, 80], color="black") # Línea de fondo izquierda
     ax.plot([0, 120], [80, 80], color="black") # Línea lateral superior
     ax.plot([120, 120], [80, 0], color="black") # Línea de fondo derecha
@@ -89,8 +81,6 @@ def draw_pitch(ax):
     ax.set_ylim(0, 80)
     ax.set_aspect('equal', adjustable='box')
     ax.set_facecolor("mediumseagreen") # Fondo verde del campo
-
-# --- 3. LÓGICA DE STREAMLIT ---
 
 st.title("🗺️ Mapeo de Eventos en el Campo de Juego")
 
