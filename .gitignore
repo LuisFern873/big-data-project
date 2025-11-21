@@ -1,1 +1,6 @@
 airflow/data/
+airflow/logs/
+airflow/*.pid
+events.py
+leer.py
+view.py

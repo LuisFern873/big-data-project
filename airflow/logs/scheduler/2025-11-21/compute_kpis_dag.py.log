@@ -1,0 +1,84 @@
+[2025-11-21T00:00:23.044+0000] {processor.py:161} INFO - Started process (PID=285) to work on /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:00:23.047+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/compute_kpis_dag.py for tasks to queue
+[2025-11-21T00:00:23.048+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:00:23.048+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:00:23.158+0000] {processor.py:840} INFO - DAG(s) 'copa2024_compute_kpis' retrieved from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:00:23.195+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:00:23.195+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:00:23.225+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:00:23.224+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_compute_kpis to 2025-11-21 00:00:00+00:00, run_after=2025-11-22 00:00:00+00:00
+[2025-11-21T00:00:23.284+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/compute_kpis_dag.py took 0.245 seconds
+[2025-11-21T00:00:53.927+0000] {processor.py:161} INFO - Started process (PID=287) to work on /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:00:53.929+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/compute_kpis_dag.py for tasks to queue
+[2025-11-21T00:00:53.931+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:00:53.930+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:00:54.022+0000] {processor.py:840} INFO - DAG(s) 'copa2024_compute_kpis' retrieved from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:00:54.052+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:00:54.052+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:00:54.080+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:00:54.080+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_compute_kpis to 2025-11-21 00:00:00+00:00, run_after=2025-11-22 00:00:00+00:00
+[2025-11-21T00:00:54.140+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/compute_kpis_dag.py took 0.216 seconds
+[2025-11-21T00:01:25.080+0000] {processor.py:161} INFO - Started process (PID=289) to work on /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:01:25.081+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/compute_kpis_dag.py for tasks to queue
+[2025-11-21T00:01:25.083+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:01:25.082+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:01:25.157+0000] {processor.py:840} INFO - DAG(s) 'copa2024_compute_kpis' retrieved from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:01:25.187+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:01:25.187+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:01:25.215+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:01:25.214+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_compute_kpis to 2025-11-21 00:00:00+00:00, run_after=2025-11-22 00:00:00+00:00
+[2025-11-21T00:01:25.274+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/compute_kpis_dag.py took 0.197 seconds
+[2025-11-21T00:01:58.337+0000] {processor.py:161} INFO - Started process (PID=291) to work on /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:01:58.338+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/compute_kpis_dag.py for tasks to queue
+[2025-11-21T00:01:58.339+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:01:58.339+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:01:58.426+0000] {processor.py:840} INFO - DAG(s) 'copa2024_compute_kpis' retrieved from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:01:58.462+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:01:58.462+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:01:58.488+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:01:58.488+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_compute_kpis to 2025-11-21 00:00:00+00:00, run_after=2025-11-22 00:00:00+00:00
+[2025-11-21T00:01:58.557+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/compute_kpis_dag.py took 0.224 seconds
+[2025-11-21T00:02:32.211+0000] {processor.py:161} INFO - Started process (PID=293) to work on /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:02:32.213+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/compute_kpis_dag.py for tasks to queue
+[2025-11-21T00:02:32.214+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:02:32.214+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:02:32.292+0000] {processor.py:840} INFO - DAG(s) 'copa2024_compute_kpis' retrieved from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:02:32.321+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:02:32.321+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:02:32.348+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:02:32.348+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_compute_kpis to 2025-11-21 00:00:00+00:00, run_after=2025-11-22 00:00:00+00:00
+[2025-11-21T00:02:32.411+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/compute_kpis_dag.py took 0.206 seconds
+[2025-11-21T00:03:04.919+0000] {processor.py:161} INFO - Started process (PID=295) to work on /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:03:04.920+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/compute_kpis_dag.py for tasks to queue
+[2025-11-21T00:03:04.922+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:03:04.921+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:03:05.043+0000] {processor.py:840} INFO - DAG(s) 'copa2024_compute_kpis' retrieved from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:03:05.087+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:03:05.087+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:03:05.124+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:03:05.123+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_compute_kpis to 2025-11-21 00:00:00+00:00, run_after=2025-11-22 00:00:00+00:00
+[2025-11-21T00:03:05.195+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/compute_kpis_dag.py took 0.280 seconds
+[2025-11-21T00:03:38.835+0000] {processor.py:161} INFO - Started process (PID=297) to work on /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:03:38.837+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/compute_kpis_dag.py for tasks to queue
+[2025-11-21T00:03:38.838+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:03:38.838+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:03:38.912+0000] {processor.py:840} INFO - DAG(s) 'copa2024_compute_kpis' retrieved from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:03:38.952+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:03:38.952+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:03:38.996+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:03:38.996+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_compute_kpis to 2025-11-21 00:00:00+00:00, run_after=2025-11-22 00:00:00+00:00
+[2025-11-21T00:03:39.100+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/compute_kpis_dag.py took 0.268 seconds
+[2025-11-21T00:04:11.730+0000] {processor.py:161} INFO - Started process (PID=299) to work on /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:04:11.731+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/compute_kpis_dag.py for tasks to queue
+[2025-11-21T00:04:11.733+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:04:11.732+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:04:11.808+0000] {processor.py:840} INFO - DAG(s) 'copa2024_compute_kpis' retrieved from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:04:11.837+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:04:11.837+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:04:11.863+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:04:11.863+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_compute_kpis to 2025-11-21 00:00:00+00:00, run_after=2025-11-22 00:00:00+00:00
+[2025-11-21T00:04:11.932+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/compute_kpis_dag.py took 0.206 seconds
+[2025-11-21T00:04:45.614+0000] {processor.py:161} INFO - Started process (PID=301) to work on /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:04:45.615+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/compute_kpis_dag.py for tasks to queue
+[2025-11-21T00:04:45.617+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:04:45.616+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:04:45.699+0000] {processor.py:840} INFO - DAG(s) 'copa2024_compute_kpis' retrieved from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:04:45.734+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:04:45.733+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:04:45.762+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:04:45.761+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_compute_kpis to 2025-11-21 00:00:00+00:00, run_after=2025-11-22 00:00:00+00:00
+[2025-11-21T00:04:45.832+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/compute_kpis_dag.py took 0.222 seconds
+[2025-11-21T00:05:18.210+0000] {processor.py:161} INFO - Started process (PID=303) to work on /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:05:18.212+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/compute_kpis_dag.py for tasks to queue
+[2025-11-21T00:05:18.215+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:05:18.214+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:05:18.304+0000] {processor.py:840} INFO - DAG(s) 'copa2024_compute_kpis' retrieved from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:05:18.342+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:05:18.341+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:05:18.386+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:05:18.386+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_compute_kpis to 2025-11-21 00:00:00+00:00, run_after=2025-11-22 00:00:00+00:00
+[2025-11-21T00:05:18.459+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/compute_kpis_dag.py took 0.253 seconds
+[2025-11-21T00:05:51.821+0000] {processor.py:161} INFO - Started process (PID=305) to work on /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:05:51.823+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/compute_kpis_dag.py for tasks to queue
+[2025-11-21T00:05:51.824+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:05:51.824+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:05:51.899+0000] {processor.py:840} INFO - DAG(s) 'copa2024_compute_kpis' retrieved from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:05:51.929+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:05:51.929+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:05:51.957+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:05:51.956+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_compute_kpis to 2025-11-21 00:00:00+00:00, run_after=2025-11-22 00:00:00+00:00
+[2025-11-21T00:05:52.019+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/compute_kpis_dag.py took 0.201 seconds
+[2025-11-21T00:06:25.461+0000] {processor.py:161} INFO - Started process (PID=307) to work on /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:06:25.463+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/compute_kpis_dag.py for tasks to queue
+[2025-11-21T00:06:25.464+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:06:25.464+0000] {dagbag.py:540} INFO - Filling up the DagBag from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:06:25.545+0000] {processor.py:840} INFO - DAG(s) 'copa2024_compute_kpis' retrieved from /opt/airflow/dags/compute_kpis_dag.py
+[2025-11-21T00:06:25.577+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:06:25.577+0000] {dag.py:3047} INFO - Sync 1 DAGs
+[2025-11-21T00:06:25.613+0000] {logging_mixin.py:188} INFO - [2025-11-21T00:06:25.613+0000] {dag.py:3834} INFO - Setting next_dagrun for copa2024_compute_kpis to 2025-11-21 00:00:00+00:00, run_after=2025-11-22 00:00:00+00:00
+[2025-11-21T00:06:25.677+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/compute_kpis_dag.py took 0.220 seconds

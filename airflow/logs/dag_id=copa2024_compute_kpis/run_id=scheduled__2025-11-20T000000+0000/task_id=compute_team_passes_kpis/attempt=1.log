@@ -1,0 +1,15 @@
+[2025-11-21T00:00:10.570+0000] {taskinstance.py:1979} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: copa2024_compute_kpis.compute_team_passes_kpis scheduled__2025-11-20T00:00:00+00:00 [queued]>
+[2025-11-21T00:00:10.584+0000] {taskinstance.py:1979} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: copa2024_compute_kpis.compute_team_passes_kpis scheduled__2025-11-20T00:00:00+00:00 [queued]>
+[2025-11-21T00:00:10.584+0000] {taskinstance.py:2193} INFO - Starting attempt 1 of 2
+[2025-11-21T00:00:10.616+0000] {taskinstance.py:2217} INFO - Executing <Task(PythonOperator): compute_team_passes_kpis> on 2025-11-20 00:00:00+00:00
+[2025-11-21T00:00:10.625+0000] {standard_task_runner.py:60} INFO - Started process 239 to run task
+[2025-11-21T00:00:10.630+0000] {standard_task_runner.py:87} INFO - Running: ['airflow', 'tasks', 'run', 'copa2024_compute_kpis', 'compute_team_passes_kpis', 'scheduled__2025-11-20T00:00:00+00:00', '--job-id', '69', '--raw', '--subdir', 'DAGS_FOLDER/compute_kpis_dag.py', '--cfg-path', '/tmp/tmp2qtb3a4h']
+[2025-11-21T00:00:10.633+0000] {standard_task_runner.py:88} INFO - Job 69: Subtask compute_team_passes_kpis
+[2025-11-21T00:00:10.738+0000] {task_command.py:423} INFO - Running <TaskInstance: copa2024_compute_kpis.compute_team_passes_kpis scheduled__2025-11-20T00:00:00+00:00 [running]> on host 973e28924d0a
+[2025-11-21T00:00:10.861+0000] {taskinstance.py:2513} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='copa2024' AIRFLOW_CTX_DAG_ID='copa2024_compute_kpis' AIRFLOW_CTX_TASK_ID='compute_team_passes_kpis' AIRFLOW_CTX_EXECUTION_DATE='2025-11-20T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-11-20T00:00:00+00:00'
+[2025-11-21T00:00:11.074+0000] {logging_mixin.py:188} INFO - KPIs de pases calculados para 16 equipos
+[2025-11-21T00:00:11.077+0000] {logging_mixin.py:188} INFO - Insertados 16 KPIs de pases en 'kpis'
+[2025-11-21T00:00:11.078+0000] {python.py:202} INFO - Done. Returned value was: 16
+[2025-11-21T00:00:11.122+0000] {taskinstance.py:1149} INFO - Marking task as SUCCESS. dag_id=copa2024_compute_kpis, task_id=compute_team_passes_kpis, execution_date=20251120T000000, start_date=20251121T000010, end_date=20251121T000011
+[2025-11-21T00:00:11.204+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 0
+[2025-11-21T00:00:11.224+0000] {taskinstance.py:3312} INFO - 0 downstream tasks scheduled from follow-on schedule check
