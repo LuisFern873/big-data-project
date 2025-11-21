@@ -4,3 +4,7 @@ airflow/*.pid
 events.py
 leer.py
 view.py
+
+.venv
+.env
+__pycache__
