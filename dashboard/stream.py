@@ -18,8 +18,9 @@ MONGO_HOST = os.getenv('MONGO_HOST')
 MONGO_PORT = os.getenv('MONGO_PORT')
 DB_NAME = os.getenv('DB_NAME')
 MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}:{MONGO_PORT}/"
+REFRESH_EVERY_SECONDS = 60 * 5
 
-@st.cache_data
+@st.cache_data(ttl=REFRESH_EVERY_SECONDS)
 def load_match_kpis_from_db(match_id):
     print("load_match_kpis_from_db")
     """Carga los KPIs del dashboard para un partido específico desde MongoDB."""
@@ -311,7 +312,16 @@ def render_event_distribution(df_events, teams_info):
 
 def main():
     st.set_page_config(page_title="Dashboard Táctico", layout="wide")
-    st.title("⚽ Superliga Femenina de Inglaterra - Dashboard T áctico por Partido")
+
+
+    if st.button("🔄 Actualizar datos", help="Borrar caché y recargar datos"):
+    # El botón se dibuja en la columna derecha
+        st.cache_data.clear()
+        st.rerun()
+
+    st.title("⚽ Superliga Femenina de Inglaterra - Dashboard Táctico por Partido")
+        # st.title("🏆 Resumen de Temporada")
+
 
     matches_list = load_matches_list()
 

@@ -39,6 +39,24 @@ Al ejecutar los DAGs se generan archivos en `airflow/logs`.
 
 ## Dashboard
 
+Crear un archivo `.env` en el directorio `dashboard/` con las siguientes variables de entorno (cambia los valores si es necesario):
+
+```env
+MONGO_USER="root"
+MONGO_PASS="example"
+MONGO_HOST="localhost"
+MONGO_PORT=27017
+DB_NAME="copa2024" 
+```
+
+Instalar las dependencias necesarias:
+
+```shell	
+pip install -r ./requirements.txt
+```
+
+Correr el dashboard con Streamlit:
+
 ```shell
 streamlit run dashboard/stream.py
 ```

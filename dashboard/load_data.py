@@ -19,6 +19,8 @@ MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}:{MONGO_PORT}/"
 
 print(MONGO_URI)
 
+REFRESH_EVERY_SECONDS = 60 * 5
+
 # Clasificar eventos
 event_categories = {
     "Pressure": "Defensive",
@@ -44,7 +46,7 @@ event_categories = {
     "Error": "Offensive"  # Error is both Defensive and Offensive, but categorized as Offensive here
 }
 
-@st.cache_data
+@st.cache_data(ttl=REFRESH_EVERY_SECONDS)
 def load_matches_list():
     """Carga lista de partidos para el selector."""
     client = None
@@ -63,7 +65,7 @@ def load_matches_list():
         if client:
             client.close()
 
-@st.cache_data
+@st.cache_data(ttl=REFRESH_EVERY_SECONDS)
 def load_events_for_match(match_id):
     """Extrae eventos de un partido específico filtrando en Mongo."""
     client = None
@@ -116,7 +118,7 @@ def load_events_for_match(match_id):
         if client:
             client.close()
 
-@st.cache_data
+@st.cache_data(ttl=REFRESH_EVERY_SECONDS)
 def load_lineups(match_id):
     """Carga la alineación táctica para obtener mapeo ID -> Nombre/Posición."""
     client = None
