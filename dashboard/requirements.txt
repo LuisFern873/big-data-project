@@ -3,3 +3,4 @@ matplotlib
 streamlit
 pymongo
 python-dotenv
+plotly
