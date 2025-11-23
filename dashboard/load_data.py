@@ -6,8 +6,6 @@ import os
 
 load_dotenv()
 
-REFRESH_EVERY_MINUTES = 60 * 10
-
 # --- CONFIGURACIÓN ---
 MONGO_USER = os.getenv('MONGO_USER')
 MONGO_PASS = os.getenv('MONGO_PASS')
@@ -16,8 +14,6 @@ MONGO_PORT = os.getenv('MONGO_PORT')
 DB_NAME = os.getenv('DB_NAME')
 EVENTS_COLLECTION = "events"
 MATCHES_COLLECTION = "matches" 
-PLAYERS_COLLECTION = "players"
-TEAMS_COLLECTION = "teams"
 
 MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}:{MONGO_PORT}/"
 
@@ -35,7 +31,7 @@ event_categories = {
     "Dribbled Past": "Defensive",
     "Foul Committed": "Defensive",
     "Own Goal Against": "Defensive",
-    "50/50": "Defensive",
+    "50/50": "Defensive",  # Also appears in Control, but categorized as Defensive here
     "Pass": "Control",
     "Ball Receipt": "Control",
     "Carry": "Control",
@@ -45,10 +41,10 @@ event_categories = {
     "Foul Won": "Offensive",
     "Shot": "Offensive",
     "Own Goal For": "Offensive",
-    "Error": "Offensive" 
+    "Error": "Offensive"  # Error is both Defensive and Offensive, but categorized as Offensive here
 }
 
-@st.cache_data(ttl=REFRESH_EVERY_MINUTES)
+@st.cache_data
 def load_matches_list():
     """Carga lista de partidos para el selector."""
     client = None
@@ -67,7 +63,7 @@ def load_matches_list():
         if client:
             client.close()
 
-@st.cache_data(ttl=REFRESH_EVERY_MINUTES)
+@st.cache_data
 def load_events_for_match(match_id):
     """Extrae eventos de un partido específico filtrando en Mongo."""
     client = None
@@ -110,7 +106,7 @@ def load_events_for_match(match_id):
 
             df['event_category'] = df['type'].apply(lambda x: event_categories.get(x, "Unknown"))
             print(df.head())
-        print(df.head())
+            
         return df
 
     except Exception as e:
@@ -120,7 +116,7 @@ def load_events_for_match(match_id):
         if client:
             client.close()
 
-@st.cache_data(ttl=REFRESH_EVERY_MINUTES)
+@st.cache_data
 def load_lineups(match_id):
     """Carga la alineación táctica para obtener mapeo ID -> Nombre/Posición."""
     client = None
@@ -177,196 +173,3 @@ def load_lineups(match_id):
     finally:
         if client:
             client.close()
-
-
-@st.cache_data(ttl=REFRESH_EVERY_MINUTES)
-def get_general_kpis():
-    """Obtiene métricas totales de la temporada usando agregaciones rápidas."""
-    print("excuting get_general_kpis")
-    client = None
-    try:
-        client = MongoClient(MONGO_URI)
-        db = client[DB_NAME]
-        
-        # 1. Total Partidos
-        total_matches = db[MATCHES_COLLECTION].count_documents({})
-        
-        # 2. Total Equipos (Contando nombres únicos en la colección de partidos)
-        # Usamos aggregate para extraer los nombres de los arrays de equipos
-        pipeline_teams = [
-            {"$unwind": "$teams"},
-            {"$group": {"_id": "$teams.name"}},
-            {"$count": "total"}
-        ]
-        teams_result = list(db[MATCHES_COLLECTION].aggregate(pipeline_teams))
-        total_teams = teams_result[0]['total'] if teams_result else 0
-        
-        # 3. Total Goles (Contando documentos de eventos que son Goles)
-        total_goals = db[EVENTS_COLLECTION].count_documents({
-            "type": "Shot",
-            "shot_outcome": "Goal"
-        })
-        
-        return total_matches, total_teams, total_goals
-
-    except Exception as e:
-        st.error(f"Error calculando KPIs: {e}")
-        return 0, 0, 0
-    finally:
-        if client: client.close()
-
-@st.cache_data(ttl=REFRESH_EVERY_MINUTES)
-def get_top_scorers_data(limit=10):
-    """
-    Obtiene las jugadoras con más goles.
-    Se asume que en 'events' existe el campo 'player_id' y se hace lookup a 'players'.
-    """
-    client = None
-    try:
-        client = MongoClient(MONGO_URI)
-        db = client[DB_NAME]
-        
-        pipeline = [
-            # 1. Filtrar solo goles
-            {"$match": {"type": "Shot", "shot_outcome": "Goal"}},
-            
-            # 2. Agrupar por player_id (Corregido: usamos el campo plano)
-            {"$group": {
-                "_id": "$player_id", 
-                "goals": {"$sum": 1},
-                "team": {"$first": "$team"} 
-            }},
-            
-            # 3. Lookup para obtener el nombre desde la colección 'players'
-            {"$lookup": {
-                "from": "players",       
-                "localField": "_id",     # Este es el player_id del grupo anterior
-                "foreignField": "player_id",    # El campo ID en la colección players
-                "as": "player_info"
-            }},
-            
-            # 4. Aplanar el resultado del lookup
-            {"$unwind": "$player_info"},
-            
-            # 5. Proyectar resultado final
-            {"$project": {
-                "player": "$player_info.name", # Tomamos el nombre real
-                "team": 1,
-                "goals": 1,
-                "_id": 0
-            }},
-            
-            {"$sort": {"goals": -1}},
-            {"$limit": limit}
-        ]
-        
-        data = list(db[EVENTS_COLLECTION].aggregate(pipeline))
-        return pd.DataFrame(data)
-        
-    except Exception as e:
-        st.error(f"Error cargando goleadoras: {e}")
-        return pd.DataFrame()
-    finally:
-        if client: client.close()
-
-@st.cache_data(ttl=REFRESH_EVERY_MINUTES)
-def get_teams_agg_data(limit=None):
-    """
-    Obtiene stats por equipo.
-    Args:
-        limit (int): Opcional. Si se define, devuelve solo el Top X equipos (por goles).
-    """
-    client = None
-    try:
-        client = MongoClient(MONGO_URI)
-        db = client[DB_NAME]
-        
-        pipeline = [
-            {"$match": {"type": {"$in": ["Shot", "Foul Committed"]}}},
-            
-            {"$group": {
-                "_id": "$team", 
-                "goals": {
-                    "$sum": {
-                        "$cond": [{"$and": [{"$eq": ["$type", "Shot"]}, {"$eq": ["$shot_outcome", "Goal"]}]}, 1, 0]
-                    }
-                },
-                "shots": {
-                    "$sum": {
-                        "$cond": [{"$eq": ["$type", "Shot"]}, 1, 0]
-                    }
-                },
-                "fouls": {
-                    "$sum": {
-                        "$cond": [{"$eq": ["$type", "Foul Committed"]}, 1, 0]
-                    }
-                }
-            }},
-            {"$sort": {"goals": -1}}
-        ]
-        
-        # Agregamos el límite al pipeline si el usuario lo pidió
-        if limit:
-            pipeline.append({"$limit": limit})
-        
-        data = list(db[EVENTS_COLLECTION].aggregate(pipeline))
-        df = pd.DataFrame(data).rename(columns={"_id": "team"})
-        
-        if not df.empty:
-            df['efficiency'] = df.apply(lambda x: round((x['goals'] / x['shots']) * 100, 1) if x['shots'] > 0 else 0, axis=1)
-        
-        return df
-        
-    except Exception as e:
-        st.error(f"Error cargando stats de equipos: {e}")
-        return pd.DataFrame()
-    finally:
-        if client: client.close()
-
-
-# # @st.cache_data
-# # def get_teams_agg_data():
-#     client = None
-#     try:
-#         client = MongoClient(MONGO_URI)
-#         db = client[DB_NAME]
-        
-#         pipeline = [
-#             {"$match": {"type": {"$in": ["Shot", "Foul Committed"]}}},
-            
-#             {"$group": {
-#                 # CORRECCIÓN: Usamos "$team" directamente si el campo ya contiene el nombre
-#                 "_id": "$team", 
-#                 "goals": {
-#                     "$sum": {
-#                         "$cond": [{"$and": [{"$eq": ["$type", "Shot"]}, {"$eq": ["$shot_outcome", "Goal"]}]}, 1, 0]
-#                     }
-#                 },
-#                 "shots": {
-#                     "$sum": {
-#                         "$cond": [{"$eq": ["$type", "Shot"]}, 1, 0]
-#                     }
-#                 },
-#                 "fouls": {
-#                     "$sum": {
-#                         "$cond": [{"$eq": ["$type", "Foul Committed"]}, 1, 0]
-#                     }
-#                 }
-#             }},
-#             {"$sort": {"goals": -1}}
-#         ]
-        
-#         data = list(db[EVENTS_COLLECTION].aggregate(pipeline))
-#         # Ajustamos el nombre de la columna para que coincida con el stream.py
-#         df = pd.DataFrame(data).rename(columns={"_id": "team"})
-        
-#         if not df.empty:
-#             df['efficiency'] = df.apply(lambda x: round((x['goals'] / x['shots']) * 100, 1) if x['shots'] > 0 else 0, axis=1)
-        
-#         return df
-        
-#     except Exception as e:
-#         st.error(f"Error cargando stats de equipos: {e}")
-#         return pd.DataFrame()
-#     finally:
-#         if client: client.close()
