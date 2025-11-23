@@ -15,7 +15,7 @@ TEAMS_COLLECTION = "teams"
 PLAYERS_COLLECTION = "players"
 MATCHES_COLLECTION = "matches"
 
-JSON_PATH = Path("/opt/airflow/data/copa32_events.json")
+JSON_PATH = Path("/opt/airflow/data/events_clean.json")
 TEMP_DIR = Path("/opt/airflow/data/temp")
 
 # Crear directorio temporal si no existe

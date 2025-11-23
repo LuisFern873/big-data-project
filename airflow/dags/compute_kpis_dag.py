@@ -301,6 +301,114 @@ def compute_match_statistics_kpis(**context):
     return len(results)
 
 
+def compute_match_kpis_for_dashboard(**context):
+    """Calcula los KPIs específicos que usa el dashboard: goles, tiros, faltas y tarjetas por equipo en cada partido."""
+    client = MongoClient(MONGO_URI, authSource="admin")
+    db = client[DB_NAME]
+
+    events = db["events"]
+    col_kpis = db[KPIS_COLLECTION]
+
+    try:
+        # Obtener todos los partidos únicos
+        pipeline_matches = [
+            {"$group": {"_id": "$match_id"}},
+            {"$project": {"_id": 1}}
+        ]
+        match_ids = [doc["_id"] for doc in events.aggregate(pipeline_matches) if doc["_id"] is not None]
+        print(f"Procesando KPIs para {len(match_ids)} partidos")
+
+        docs_to_insert = []
+
+        for match_id in match_ids:
+            # Para cada partido, obtener datos de ambos equipos
+            pipeline = [
+                {"$match": {"match_id": match_id}},
+                {"$group": {
+                    "_id": {
+                        "team": "$team",
+                        "team_id": "$team_id"
+                    },
+                    "goals": {
+                        "$sum": {
+                            "$cond": [
+                                {
+                                    "$and": [
+                                        {"$eq": ["$type", "Shot"]},
+                                        {"$eq": ["$shot.outcome", "Goal"]}
+                                    ]
+                                },
+                                1,
+                                0
+                            ]
+                        }
+                    },
+                    "shots": {
+                        "$sum": {"$cond": [{"$eq": ["$type", "Shot"]}, 1, 0]}
+                    },
+                    "fouls": {
+                        "$sum": {"$cond": [{"$eq": ["$type", "Foul Committed"]}, 1, 0]}
+                    },
+                    "cards": {
+                        "$sum": {
+                            "$cond": [
+                                {
+                                    "$and": [
+                                        {"$eq": ["$type", "Foul Committed"]},
+                                        {
+                                            "$in": [
+                                                "$foul_committed.card",
+                                                ["Yellow Card", "Red Card", "Second Yellow"]
+                                            ]
+                                        }
+                                    ]
+                                },
+                                1,
+                                0
+                            ]
+                        }
+                    }
+                }}
+            ]
+
+            results = list(events.aggregate(pipeline))
+
+            for r in results:
+                team_name = r["_id"].get("team")
+                team_id = r["_id"].get("team_id")
+
+                if team_name and team_id is not None:
+                    docs_to_insert.append({
+                        "level": "match",
+                        "kpi_type": "dashboard",
+                        "match_id": match_id,
+                        "team_id": team_id,
+                        "team_name": team_name,
+                        "metrics": {
+                            "goals": r["goals"],
+                            "shots": r["shots"],
+                            "fouls": r["fouls"],
+                            "cards": r["cards"],
+                        },
+                        "updated_at": datetime.utcnow()
+                    })
+
+        # Eliminar KPIs antiguos del dashboard
+        col_kpis.delete_many({"level": "match", "kpi_type": "dashboard"})
+
+        if docs_to_insert:
+            col_kpis.insert_many(docs_to_insert)
+            print(f"Insertados {len(docs_to_insert)} KPIs de dashboard en '{KPIS_COLLECTION}'")
+
+        return len(docs_to_insert)
+
+    except Exception as e:
+        print(f"Error en compute_match_kpis_for_dashboard: {e}")
+        raise
+    finally:
+        client.close()
+
+
 # Argumentos por defecto del DAG
 default_args = {
     "owner": "copa2024",
@@ -313,8 +421,8 @@ default_args = {
 with DAG(
     dag_id="copa2024_compute_kpis",
     default_args=default_args,
-    description="Cálculo de KPIs de Copa América 2024 desde MongoDB",
-    schedule_interval="@daily",  # Ejecutar diariamente
+    description="Cálculo de KPIs de la Superliga femenina de Inglaterra desde MongoDB",
+    schedule_interval="*/3 * * * *",  # Cambiar a ejecución cada hora para actualizar KPIs frecuentemente
     start_date=datetime(2025, 1, 1),
     catchup=False,
     tags=["copa2024", "kpis", "analytics", "mongodb"],
@@ -348,5 +456,11 @@ with DAG(
         provide_context=True,
     )
 
+    kpis_dashboard = PythonOperator(
+        task_id="compute_match_kpis_for_dashboard",
+        python_callable=compute_match_kpis_for_dashboard,
+        provide_context=True,
+    )
+
     # Las tareas pueden ejecutarse en paralelo ya que son independientes
-    [kpis_team_shots, kpis_team_passes, kpis_player_performance, kpis_match_statistics]
+    [kpis_team_shots, kpis_team_passes, kpis_player_performance, kpis_match_statistics, kpis_dashboard]

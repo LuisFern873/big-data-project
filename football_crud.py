@@ -3,7 +3,8 @@ from datetime import datetime
 import json
 from typing import Dict, List, Optional
 from bson import ObjectId
-
+import os
+from dotenv import load_dotenv
 
 class FootballDataCRUD:
     """
@@ -18,7 +19,7 @@ class FootballDataCRUD:
             connection_string: String de conexión a MongoDB
         """
         self.client = MongoClient(connection_string)
-        self.db = self.client['football_analytics']
+        self.db = self.client['copa2024']
         
         # Colecciones principales
         self.events = self.db['events']
@@ -27,7 +28,7 @@ class FootballDataCRUD:
         self.matches = self.db['matches']
         
         print("✓ Conexión establecida con MongoDB")
-        print(f"  - Base de datos: football_analytics")
+        print(f"  - Base de datos: copa2024")
         print(f"  - Colecciones: events, teams, players, matches")
     
     # ==================== EVENTS COLLECTION - CREATE ====================
@@ -844,8 +845,19 @@ class FootballDataCRUD:
 # ==================== EJEMPLO DE USO ====================
 
 if __name__ == "__main__":
+
+
+    load_dotenv()
+
+    MONGO_USER = os.getenv('MONGO_USER')
+    MONGO_PASS = os.getenv('MONGO_PASS')
+    MONGO_HOST = os.getenv('MONGO_HOST')
+    MONGO_PORT = os.getenv('MONGO_PORT')
+    DB_NAME = os.getenv('DB_NAME')
+    MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}:{MONGO_PORT}/"
+
     # Inicializar CRUD
-    crud = FootballDataCRUD()
+    crud = FootballDataCRUD(MONGO_URI)
     
     print("=" * 60)
     print("DEMOSTRACIÓN DE OPERACIONES CRUD")
@@ -854,17 +866,58 @@ if __name__ == "__main__":
     # CREATE - Crear un nuevo evento
     print("\n--- CREATE ---")
     new_event = {
-        "id": "test-event-001",
-        "match_id": 3764230,
-        "type": "Pass",
-        "team": "Tottenham Hotspur Women",
-        "minute": 25,
-        "period": 1,
-        "player": {
-            "id": 18158,
-            "name": "Rebecca Leigh Spencer"
-        }
+      "duration": 1.0781,
+      "id": "test-event-001",
+      "index": 2123,
+      "location": [
+        105.2,
+        28.6
+      ],
+      "match_id": 3764230,
+      "minute": 56,
+      "period": 2,
+      "play_pattern": "Regular Play",
+      "player": "Adriana Kristina Leon",
+      "player_id": 8297,
+      "position": "Left Wing",
+      "possession": 133,
+      "possession_team": "West Ham United LFC",
+      "possession_team_id": 972,
+      "related_events": [
+        "cf00345b-48dc-4964-bc7b-aba3bb0554ef"
+      ],
+      "second": 6,
+      "shot_body_part": "Right Foot",
+      "shot_end_location": [
+        120,
+        43.1,
+        2.3
+      ],
+      "shot_key_pass_id": "2c831b7e-ef48-4624-9fbe-c196082d6709",
+      "shot_outcome": "Goal",
+      "shot_statsbomb_xg": 0.08573736,
+      "shot_technique": "Normal",
+      "shot_type": "Open Play",
+      "team": "West Ham United LFC",
+      "team_id": 972,
+      "timestamp": "00:11:06.268",
+      "type": "Shot",
+      "shot": {
+        "body_part": "Right Foot",
+        "end_location": [
+          120,
+          43.1,
+          2.3
+        ],
+        "key_pass_id": "2c831b7e-ef48-4624-9fbe-c196082d6709",
+        "outcome": "Goal",
+        "statsbomb_xg": 0.08573736,
+        "technique": "Normal",
+        "type": "Open Play"
+      },
+      "event_id": "3933a7fb-b90a-4b00-8526-eb2a8bfa108c"
     }
+
     event_id = crud.create_event(new_event)
     
     # READ - Leer el evento creado

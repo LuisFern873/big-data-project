@@ -3,16 +3,56 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
-from load_data import (
-    load_events_for_match, 
-    load_matches_list, 
-    load_lineups, 
-    get_general_kpis,        
-    get_top_scorers_data, 
-    get_teams_agg_data
-)
+from load_data import load_events_for_match, load_matches_list, load_lineups
+from pymongo import MongoClient
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+
+MONGO_USER = os.getenv('MONGO_USER')
+MONGO_PASS = os.getenv('MONGO_PASS')
+MONGO_HOST = os.getenv('MONGO_HOST')
+MONGO_PORT = os.getenv('MONGO_PORT')
+DB_NAME = os.getenv('DB_NAME')
+MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}:{MONGO_PORT}/"
+
+@st.cache_data
+def load_match_kpis_from_db(match_id):
+    print("load_match_kpis_from_db")
+    """Carga los KPIs del dashboard para un partido específico desde MongoDB."""
+    client = None
+    try:
+        client = MongoClient(MONGO_URI)
+        db = client[DB_NAME]
+        col_kpis = db["kpis"]
+        
+        # Buscar KPIs específicos del dashboard para este partido
+        kpis_data = list(col_kpis.find({
+            "level": "match",
+            "kpi_type": "dashboard",
+            "match_id": match_id
+        }))
+        
+        # Convertir a diccionario con team_name como clave
+        kpis_dict = {}
+        for kpi in kpis_data:
+            team_name = kpi.get("team_name")
+            if team_name:
+                kpis_dict[team_name] = kpi.get("metrics", {})
+        
+        return kpis_dict
+    except Exception as e:
+        st.error(f"Error al cargar KPIs: {e}")
+        return {}
+    finally:
+        if client:
+            client.close()
+
+
 # --- FUNCIONES DE DIBUJO ---
-st.set_page_config(page_title="Dashboard Táctico", layout="wide")
 
 def draw_pitch(ax):
     """Dibuja el campo de juego (120x80) en un eje de Matplotlib dado."""
@@ -88,26 +128,25 @@ def get_match_result(df_events, teams_info):
 
 # --- FUNCIONES DE UI (SECCIONES) ---
 
-def render_kpis(df_events, teams_info, team_colors, team_goals, winner):
-    """Renderiza la sección de estadísticas clave."""
+def render_kpis(kpis_dict, teams_info, team_colors, winner):
+    """Renderiza la sección de estadísticas clave desde los KPIs precalculados."""
     st.markdown("### 📊 Estadísticas Clave")
     col1, col2 = st.columns(2)
-    
-    card_values = ["Yellow Card", "Red Card", "Second Yellow"]
 
     for i, col in enumerate([col1, col2]):
         team_name = teams_info[i]['name']
-        df_team = df_events[df_events['team_name'] == team_name]
         
-        # Cálculos
-        goals_count = team_goals[team_name]
-        fouls_count = len(df_team[df_team['type'] == "Foul Committed"])
-        shots_count = len(df_team[df_team['type'] == "Shot"])
+        metrics = kpis_dict.get(team_name, {
+            "goals": 0,
+            "shots": 0,
+            "fouls": 0,
+            "cards": 0
+        })
         
-        if 'foul_committed_card' in df_team.columns:
-            cards_count = len(df_team[df_team['foul_committed_card'].isin(card_values)])
-        else:
-            cards_count = 0
+        goals_count = metrics.get("goals", 0)
+        shots_count = metrics.get("shots", 0)
+        fouls_count = metrics.get("fouls", 0)
+        cards_count = metrics.get("cards", 0)
         
         with col:
             header_text = f":{team_colors[team_name]}[{team_name}]"
@@ -123,8 +162,6 @@ def render_kpis(df_events, teams_info, team_colors, team_goals, winner):
             kpi_c, kpi_d = st.columns(2)
             kpi_c.metric("Faltas", fouls_count)
             kpi_d.metric("Tarjetas", cards_count)
-            
-            # st.divider()
 
 def render_player_positions(df_events, teams_info, team_colors, match_id):
     """Calcula y grafica la posición promedio de los jugadores usando Player ID."""
@@ -151,6 +188,7 @@ def render_player_positions(df_events, teams_info, team_colors, match_id):
     for team in teams_info:
         t_name = team['name']
         
+        # Obtener DF de alineación y DF de promedios para este equipo
         df_lineup = lineups.get(t_name)
         df_avg = avg_positions[avg_positions['team_name'] == t_name]
         
@@ -164,17 +202,23 @@ def render_player_positions(df_events, teams_info, team_colors, match_id):
     if all_players_data:
         full_df = pd.concat(all_players_data)
         
+        # Crear gráfico Plotly
         fig = go.Figure()
 
+        # Agregar formas de la cancha
         fig.update_layout(
             shapes=get_plotly_pitch(),
             xaxis=dict(range=[0, 120], showgrid=False, visible=False),
+            # Invertimos Y (80 -> 0) porque en coordenadas de fútbol (0,0) suele ser esquina superior izq
+            # pero depende del proveedor. StatsBomb suele ser (0,80) abajo-izq. 
+            # Si se ven invertidos los equipos, cambiar a range=[0, 80].
             yaxis=dict(range=[80, 0], showgrid=False, visible=False), 
             height=600,
             plot_bgcolor='mediumseagreen',
             margin=dict(l=20, r=20, t=20, b=20),
         )
         
+        # Agregar jugadores por equipo
         for team_name in full_df['team'].unique():
             team_data = full_df[full_df['team'] == team_name]
             
@@ -193,7 +237,6 @@ def render_player_positions(df_events, teams_info, team_colors, match_id):
         st.caption("Nota: Se muestra la ubicación promedio de todas las acciones realizadas por cada jugador.")
     else:
         st.info("No hay suficientes datos cruzados para generar el mapa de jugadores.")
-
 
 def render_pitch_map(df_events, teams_info, team_colors, match_label):
     """Renderiza el mapa del campo con los eventos filtrados (Matplotlib)."""
@@ -266,8 +309,9 @@ def render_event_distribution(df_events, teams_info):
 
 # --- MAIN APP ---
 
-def Por_Partido():
-    st.title("⚽ Dashboard Táctico por Partido")
+def main():
+    st.set_page_config(page_title="Dashboard Táctico", layout="wide")
+    st.title("⚽ Superliga Femenina de Inglaterra - Dashboard T áctico por Partido")
 
     matches_list = load_matches_list()
 
@@ -294,11 +338,21 @@ def Por_Partido():
                 teams_info[1]['name']: 'red'
             }
             
-            # Cálculo de estadísticas globales del partido
-            team_goals, winner = get_match_result(df_events, teams_info)
+            kpis_dict = load_match_kpis_from_db(selected_match_id)
+            
+            team1_name = teams_info[0]['name']
+            team2_name = teams_info[1]['name']
+            team1_goals = kpis_dict.get(team1_name, {}).get("goals", 0)
+            team2_goals = kpis_dict.get(team2_name, {}).get("goals", 0)
+            
+            winner = None
+            if team1_goals > team2_goals:
+                winner = team1_name
+            elif team2_goals > team1_goals:
+                winner = team2_name
 
             # Renderizado de secciones
-            render_kpis(df_events, teams_info, team_colors, team_goals, winner)
+            render_kpis(kpis_dict, teams_info, team_colors, winner)
             render_event_distribution(df_events, teams_info)
             render_player_positions(df_events, teams_info, team_colors, selected_match_id)
             render_pitch_map(df_events, teams_info, team_colors, selected_match_label)
@@ -307,114 +361,6 @@ def Por_Partido():
             st.info("No hay datos de eventos con ubicación para este partido.")
     else:
         st.warning("No se encontraron partidos en la colección 'matches'.")
-
-
-def General():
-    st.title("🏆 Resumen de Temporada: WSL 2020/2021")
-    
-    # 1. Cargar Datos
-    total_matches, total_teams, total_goals = get_general_kpis()
-    
-    # Top 10 goleadoras
-    df_scorers = get_top_scorers_data(limit=10)
-    
-    # Top 10 equipos (puedes cambiar limit=None para ver todos)
-    df_teams = get_teams_agg_data(limit=10) 
-    
-    # --- MÉTRICAS (KPIs) ---
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Partidos Jugados", total_matches)
-    col2.metric("Equipos", total_teams)
-    col3.metric("Goles Totales", total_goals)
-    
-    st.divider()
-    
-    if df_teams.empty or df_scorers.empty:
-        st.warning("No hay suficientes datos para generar los gráficos.")
-        return
-
-    # --- GRID DE GRÁFICOS (2x2) ---
-    
-    # FILA 1
-    row1_col1, row1_col2 = st.columns(2)
-    
-    with row1_col1:
-        st.subheader("Goles por jugadora (top)")
-        
-        # 1. Ordenamos el DF de MENOR a MAYOR (ascending=True).
-        # En gráficos horizontales de Plotly, el último dato se dibuja ARRIBA.
-        df_sorted = df_scorers.sort_values(by="goals", ascending=True)
-        
-        fig_scorers = px.bar(
-            df_sorted,
-            x="goals", 
-            y="player", 
-            orientation='h', 
-            text="goals",
-            color="team", 
-            color_discrete_sequence=px.colors.qualitative.Prism
-        )
-        
-        # 2. FORZAMOS el orden del eje Y para que respete los valores totales
-        fig_scorers.update_layout(
-            showlegend=False, 
-            xaxis_title="Goles", 
-            yaxis_title="",
-            yaxis={'categoryorder':'total ascending'} # <--- ESTA LÍNEA ES LA CLAVE
-        )
-        st.plotly_chart(fig_scorers, use_container_width=True)
-        
-    with row1_col2:
-        st.subheader("Goles por equipo (top)")
-        # Ordenamos por goles para el gráfico
-        fig_team_goals = px.bar(
-            df_teams.sort_values(by="goals", ascending=False), # El límite ya vino aplicado desde la BD
-            x="team", y="goals", text="goals",
-            color="goals", color_continuous_scale="Blues"
-        )
-        fig_team_goals.update_layout(showlegend=False, xaxis_title="", yaxis_title="Goles")
-        st.plotly_chart(fig_team_goals, use_container_width=True)
-
-    st.divider()
-
-    # FILA 2
-    row2_col1, row2_col2 = st.columns(2)
-    
-    with row2_col1:
-        st.subheader("Disciplina (Faltas Cometidas)")
-        # Para disciplina, reordenamos el mismo DF (que quizás ya está limitado por goles)
-        # OJO: Si quieres ver los más sucios de TODA la liga, deberías llamar a get_teams_agg_data(limit=None)
-        # Aquí usaremos el top de goles para comparar, o reordenamos lo que tenemos.
-        
-        df_fouls = df_teams.sort_values(by="fouls", ascending=False)
-        fig_fouls = px.bar(
-            df_fouls, x="team", y="fouls", text="fouls",
-            color="fouls", color_continuous_scale="Reds"
-        )
-        fig_fouls.update_layout(showlegend=False, xaxis_title="", yaxis_title="Faltas")
-        st.plotly_chart(fig_fouls, use_container_width=True)
-        
-    with row2_col2:
-        st.subheader("Eficiencia de Tiro")
-        fig_eff = px.scatter(
-            df_teams, x="shots", y="goals",
-            size="efficiency", color="team", text="team",
-            hover_data=["efficiency"]
-        )
-        fig_eff.update_traces(textposition='top center')
-        fig_eff.update_layout(showlegend=False, xaxis_title="Tiros", yaxis_title="Goles")
-        st.plotly_chart(fig_eff, use_container_width=True)
-
-def main():
-    # En stream.py, al principio de tu función principal o en el sidebar
-
-    if st.sidebar.button("🔄 Actualizar Datos"):
-        # Borra TODA la memoria caché de la app
-        st.cache_data.clear()
-        # Recarga la página
-        st.rerun()
-    pg = st.navigation([General, Por_Partido])
-    pg.run()
 
 if __name__ == "__main__":
     main()
