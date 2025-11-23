@@ -17,6 +17,8 @@ MATCHES_COLLECTION = "matches"
 
 MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}:{MONGO_PORT}/"
 
+print(MONGO_URI)
+
 # Clasificar eventos
 event_categories = {
     "Pressure": "Defensive",

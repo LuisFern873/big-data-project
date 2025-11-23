@@ -37,3 +37,9 @@ Antes de ejecutar los DAGs, asegurate de cargar el archivo `copa32_events.json` 
 Al ejecutar los DAGs se generan archivos en `airflow/logs`.
 
 
+## Dashboard
+
+```shell
+streamlit run dashboard/stream.py
+```
+

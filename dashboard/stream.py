@@ -4,6 +4,53 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
 from load_data import load_events_for_match, load_matches_list, load_lineups
+from pymongo import MongoClient
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+
+MONGO_USER = os.getenv('MONGO_USER')
+MONGO_PASS = os.getenv('MONGO_PASS')
+MONGO_HOST = os.getenv('MONGO_HOST')
+MONGO_PORT = os.getenv('MONGO_PORT')
+DB_NAME = os.getenv('DB_NAME')
+MONGO_URI = f"mongodb://{MONGO_USER}:{MONGO_PASS}@{MONGO_HOST}:{MONGO_PORT}/"
+
+@st.cache_data
+def load_match_kpis_from_db(match_id):
+    print("load_match_kpis_from_db")
+    """Carga los KPIs del dashboard para un partido específico desde MongoDB."""
+    client = None
+    try:
+        client = MongoClient(MONGO_URI)
+        db = client[DB_NAME]
+        col_kpis = db["kpis"]
+        
+        # Buscar KPIs específicos del dashboard para este partido
+        kpis_data = list(col_kpis.find({
+            "level": "match",
+            "kpi_type": "dashboard",
+            "match_id": match_id
+        }))
+        
+        # Convertir a diccionario con team_name como clave
+        kpis_dict = {}
+        for kpi in kpis_data:
+            team_name = kpi.get("team_name")
+            if team_name:
+                kpis_dict[team_name] = kpi.get("metrics", {})
+        
+        return kpis_dict
+    except Exception as e:
+        st.error(f"Error al cargar KPIs: {e}")
+        return {}
+    finally:
+        if client:
+            client.close()
+
 
 # --- FUNCIONES DE DIBUJO ---
 
@@ -81,26 +128,25 @@ def get_match_result(df_events, teams_info):
 
 # --- FUNCIONES DE UI (SECCIONES) ---
 
-def render_kpis(df_events, teams_info, team_colors, team_goals, winner):
-    """Renderiza la sección de estadísticas clave."""
+def render_kpis(kpis_dict, teams_info, team_colors, winner):
+    """Renderiza la sección de estadísticas clave desde los KPIs precalculados."""
     st.markdown("### 📊 Estadísticas Clave")
     col1, col2 = st.columns(2)
-    
-    card_values = ["Yellow Card", "Red Card", "Second Yellow"]
 
     for i, col in enumerate([col1, col2]):
         team_name = teams_info[i]['name']
-        df_team = df_events[df_events['team_name'] == team_name]
         
-        # Cálculos
-        goals_count = team_goals[team_name]
-        fouls_count = len(df_team[df_team['type'] == "Foul Committed"])
-        shots_count = len(df_team[df_team['type'] == "Shot"])
+        metrics = kpis_dict.get(team_name, {
+            "goals": 0,
+            "shots": 0,
+            "fouls": 0,
+            "cards": 0
+        })
         
-        if 'foul_committed_card' in df_team.columns:
-            cards_count = len(df_team[df_team['foul_committed_card'].isin(card_values)])
-        else:
-            cards_count = 0
+        goals_count = metrics.get("goals", 0)
+        shots_count = metrics.get("shots", 0)
+        fouls_count = metrics.get("fouls", 0)
+        cards_count = metrics.get("cards", 0)
         
         with col:
             header_text = f":{team_colors[team_name]}[{team_name}]"
@@ -116,8 +162,6 @@ def render_kpis(df_events, teams_info, team_colors, team_goals, winner):
             kpi_c, kpi_d = st.columns(2)
             kpi_c.metric("Faltas", fouls_count)
             kpi_d.metric("Tarjetas", cards_count)
-            
-            # st.divider()
 
 def render_player_positions(df_events, teams_info, team_colors, match_id):
     """Calcula y grafica la posición promedio de los jugadores usando Player ID."""
@@ -194,7 +238,6 @@ def render_player_positions(df_events, teams_info, team_colors, match_id):
     else:
         st.info("No hay suficientes datos cruzados para generar el mapa de jugadores.")
 
-
 def render_pitch_map(df_events, teams_info, team_colors, match_label):
     """Renderiza el mapa del campo con los eventos filtrados (Matplotlib)."""
     st.divider()
@@ -268,7 +311,7 @@ def render_event_distribution(df_events, teams_info):
 
 def main():
     st.set_page_config(page_title="Dashboard Táctico", layout="wide")
-    st.title("⚽ Dashboard Táctico por Partido")
+    st.title("⚽ Superliga Femenina de Inglaterra - Dashboard T áctico por Partido")
 
     matches_list = load_matches_list()
 
@@ -295,11 +338,21 @@ def main():
                 teams_info[1]['name']: 'red'
             }
             
-            # Cálculo de estadísticas globales del partido
-            team_goals, winner = get_match_result(df_events, teams_info)
+            kpis_dict = load_match_kpis_from_db(selected_match_id)
+            
+            team1_name = teams_info[0]['name']
+            team2_name = teams_info[1]['name']
+            team1_goals = kpis_dict.get(team1_name, {}).get("goals", 0)
+            team2_goals = kpis_dict.get(team2_name, {}).get("goals", 0)
+            
+            winner = None
+            if team1_goals > team2_goals:
+                winner = team1_name
+            elif team2_goals > team1_goals:
+                winner = team2_name
 
             # Renderizado de secciones
-            render_kpis(df_events, teams_info, team_colors, team_goals, winner)
+            render_kpis(kpis_dict, teams_info, team_colors, winner)
             render_event_distribution(df_events, teams_info)
             render_player_positions(df_events, teams_info, team_colors, selected_match_id)
             render_pitch_map(df_events, teams_info, team_colors, selected_match_label)
